@@ -4,12 +4,12 @@ import { AuthRoutes } from "./AuthRoutes";
 import { EmployeeRoutes } from "./EmployeeRoutes";
 import { ManagerRoutes } from "./ManagerRoutes";
 
-const isLoading = false;
+const isLoading = true;
 // const session = undefined
 
 const session = {
   user: {
-    role: "manager",
+    role: "",
   },
 };
 
