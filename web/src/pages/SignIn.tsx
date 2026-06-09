@@ -4,17 +4,20 @@ import { AxiosError } from "axios";
 import { z, ZodError } from "zod";
 
 import { api } from "../services/api";
+import { useAuth } from "../hooks/useAuth";
 
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 
 const signSchema = z.object({
-  email: z.string().email({ message: "E-mail inválido" }),
-  password: z.string().trim().min(1, { message: "Informe a senha" }),
+  email: z.string().email("E-mail inválido"),
+  password: z.string().trim().min(1, "Informe a senha"),
 });
 
 export function SignIn() {
   const [state, formAction, isLoading] = useActionState(signIn, null);
+
+  const auth = useAuth()
 
   async function signIn(_: any, formData: FormData) {
     try {
@@ -24,7 +27,7 @@ export function SignIn() {
       });
 
       const response = await api.post("/sessions", data);
-      console.log(response.data);
+      auth.save(response.data)
     } catch (error) {
       console.log(error);
 

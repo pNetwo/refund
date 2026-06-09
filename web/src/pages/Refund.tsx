@@ -1,5 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+
+import { AxiosError } from "axios";
+import { z, ZodError } from "zod";
+
+import { api } from "../services/api";
+
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { Select } from "../components/Select";
@@ -7,6 +13,15 @@ import { Upload } from "../components/Upload";
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/categories";
 
 import { File } from "lucide-react";
+import { formatCurrency } from "../utils/formatCurrency";
+
+const refundSchema = z.object({
+  name: z.string().min(3, "Informe um nome claro para sua solicitação"),
+  category: z.string().min(1, "Informe a categoria"),
+  amount: z.coerce
+    .number("Informe um valor válido")
+    .positive("Informe um valor superior a 0"),
+});
 
 export function Refund() {
   const [name, setName] = useState("");
@@ -14,21 +29,83 @@ export function Refund() {
   const [category, setCategory] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [filename, setFilename] = useState<File | null>(null);
+  const [fileURL, setFileURL] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
 
-  function onSubmit(e: React.SubmitEvent) {
+  async function onSubmit(e: React.SubmitEvent) {
     e.preventDefault();
 
-    if (params.id) {
+    if (params.id && fileURL) {
       return navigate(-1);
     }
 
-    console.log(name, amount, category, filename);
+    try {
+      setIsLoading(true);
 
-    navigate("/confirm", { state: { fromSubmit: true } });
+      if (!filename) {
+        return alert("Selecione um arquivo de comprovante");
+      }
+
+      const fileUploadForm = new FormData();
+      fileUploadForm.append("file", filename);
+
+      const response = await api.post("/uploads", fileUploadForm);
+
+      const data = refundSchema.parse({
+        name,
+        category,
+        amount: amount.replace(",", "."),
+      });
+
+      await api.post("/refunds", {
+        ...data,
+        filename: response.data.filename,
+      });
+
+      navigate("/confirm", { state: { fromSubmit: true } });
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof ZodError) {
+        return alert(error.issues[0].message);
+      }
+
+      if (error instanceof AxiosError) {
+        return alert(error.response?.data.message);
+      }
+
+      alert("Não foi possível realizar a solicitação");
+    } finally {
+      setIsLoading(false);
+    }
   }
+
+  async function fetchRefund(id: string) {
+    try {
+      const { data } = await api.get<RefundAPIResponse>(`/refunds/${id}`);
+
+      setName(data.name);
+      setCategory(data.category);
+      setAmount(formatCurrency(data.amount));
+      setFileURL(data.filename);
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof AxiosError) {
+        return alert(error.response?.data.message);
+      }
+
+      alert("Não foi possível carregar");
+    }
+  }
+
+  useEffect(() => {
+    if (params.id) {
+      fetchRefund(params.id);
+    }
+  }, [params.id]);
 
   return (
     <form
@@ -61,7 +138,9 @@ export function Refund() {
           disabled={!!params.id}
         >
           {CATEGORIES_KEYS.map((category) => (
-            <option>{CATEGORIES[category].name}</option>
+            <option key={category} value={category}>
+              {CATEGORIES[category].name}
+            </option>
           ))}
         </Select>
 
@@ -75,8 +154,12 @@ export function Refund() {
       </div>
 
       {params.id ? (
-        <a href="https://www.youtube.com/?hl=pt&gl=BR" target="_blank" className="text-sm text-green-100 font-semibold flex items-center justify-center gap-2 my-6 hover:opacity-70 transition ease-linear">
-          <File className="text-green-100"/>
+        <a
+          href={`http://localhost:3333/uploads/${fileURL}`}
+          target="_blank"
+          className="text-sm text-green-100 font-semibold flex items-center justify-center gap-2 my-6 hover:opacity-70 transition ease-linear"
+        >
+          <File className="text-green-100" />
           Abrir comprovante
         </a>
       ) : (
