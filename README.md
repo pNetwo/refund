@@ -26,4 +26,4 @@ Criei esse projeto prático na trilha Full-Stack da Rocketseat.
 
 ---
 
-Desenvolvido por Paulo Neto junto com a Rocketseat.
+Desenvolvido por Paulo Neto em estudos da Rocketseat.
