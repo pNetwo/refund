@@ -9,7 +9,7 @@
 ## 📋 Descrição
 
 Criei esse projeto prático na trilha Full-Stack da Rocketseat. 
-É uma aplicação completa que envolve a conexão entre front-end em React e a API em Node. Esse projeto aborda a criação de contas, validações e rotas de autenticação. Também foi explorado a paginação e pesquisa de solicitações.
+É uma aplicação completa que envolve a conexão entre front-end em React e a API em Node. Esse projeto aborda a criação de contas, validações e rotas de autenticação. Também foi explorada a paginação e pesquisa de solicitações.
 
 ## 🛠️ Tecnologias Utilizadas
 
