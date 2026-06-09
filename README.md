@@ -2,8 +2,8 @@
 
 É uma aplicação web de pedidos de reembolso e listagem de despesas empresariais.
 
-![Preview do Projeto](src/assets/screens/signin.png)
-![Preview do Projeto](src/assets/screens/dashboard.png)![Preview do Projeto](src/assets/screens/service.png)
+![Preview do Projeto](/web/src/assets/screens/signin.png)
+![Preview do Projeto](/web/src/assets/screens/employee.png)![Preview do Projeto](/web/src/assets/screens/manager.png)
 
 
 ## 📋 Descrição
