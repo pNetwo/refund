@@ -8,10 +8,8 @@
 
 ## 📋 Descrição
 
-Criei esse projeto usando Vite. Dispath é uma ferramenta simples e o visual robusto com foco apenas em cadastros de serviços realizados e da frota. Seu principal foco era resolver o maior problema que enfrentávamos: 
-- Cadastros de serviços realizados ou agendados.
-- Controle da frota e motoristas.
-- Banco de dados com OS e seus check-lists para alguma eventualidade futura.
+Criei esse projeto prático na trilha Full-Stack da Rocketseat. 
+É uma aplicação completa que envolve a conexão entre front-end em React e a API em Node. Esse projeto aborda a criação de contas, validações e rotas de autenticação. Também foi explorado a paginação e pesquisa de solicitações.
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -20,6 +18,12 @@ Criei esse projeto usando Vite. Dispath é uma ferramenta simples e o visual rob
 - **TypeScript**
 - **Tailwind**
 
+### **Back-end**
+- **Express**
+- **Node.js**
+- **Prisma**
+- **Zod**
+
 ---
 
-Desenvolvido por Paulo Neto.
+Desenvolvido por Paulo Neto junto com a Rocketseat.
